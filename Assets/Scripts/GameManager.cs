@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HUDManager _hudManagerPrefab;
     
     public static GameManager Instance { get; private set; }
+    public bool IsGameActive => isGameActive;
     
     private event Action<int> ScoreUpdatedEvent;
     private event Action<int> MovesUpdatedEvent;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     private const int DEFAULT_SCORE = 0;
     private int _currentMoves;
     private int _currentScore;
+    private bool isGameActive;
 
     private void Awake()
     {
@@ -43,6 +45,7 @@ public class GameManager : MonoBehaviour
         
         MovesUpdatedEvent?.Invoke(_currentMoves);
         ScoreUpdatedEvent?.Invoke(_currentScore);
+        isGameActive = true;
     }
 
     private bool IsGameover()
@@ -50,6 +53,18 @@ public class GameManager : MonoBehaviour
         return _currentMoves == 0;
     }
 
+    public void UseMove()
+    {
+        _currentMoves--;
+        MovesUpdatedEvent?.Invoke(_currentMoves);
+    }
+
+    public void AddScore(int score)
+    {
+        _currentScore = score;
+        ScoreUpdatedEvent?.Invoke(_currentScore);
+    }
+    
     public void Replay()
     {
         _currentMoves = _totalMoves;
